@@ -7,7 +7,7 @@ const StepVisualizer = ({ snapshots, activeSymbol, setActiveSymbol }) => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <h3 style={{ fontSize: '1.5rem', fontWeight: 700, borderBottom: '1px solid hsla(var(--border), 0.5)', paddingBottom: '12px' }}>
+      <h3 style={{ fontSize: '1.5rem', fontWeight: 700, borderBottom: '1px solid var(--border-light)', paddingBottom: '12px' }}>
         Transformation Steps
       </h3>
       
@@ -28,21 +28,21 @@ const StepVisualizer = ({ snapshots, activeSymbol, setActiveSymbol }) => {
                   borderRadius: '10px',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontWeight: 'bold', fontSize: '1.1rem',
-                  boxShadow: '0 4px 10px hsla(var(--primary), 0.3)'
+                    boxShadow: '0 4px 10px var(--primary-glow)'
                 }}>
                   {index + 1}
                 </div>
                 <div>
                   <h4 style={{ fontSize: '1.15rem', fontWeight: 600, margin: 0 }}>{snap.stepName}</h4>
-                  <p style={{ fontSize: '0.9rem', color: 'hsla(var(--foreground), 0.6)', margin: 0 }}>{snap.description}</p>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-dim)', margin: 0 }}>{snap.description}</p>
                 </div>
               </div>
               
               <div style={{ 
-                background: 'hsla(var(--background), 0.5)', 
+                background: 'var(--bg-main)',
                 padding: '16px', 
                 borderRadius: '10px', 
-                border: '1px solid hsla(var(--foreground), 0.05)',
+                border: '1px solid var(--border)',
                 boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.2)'
               }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -57,37 +57,37 @@ const StepVisualizer = ({ snapshots, activeSymbol, setActiveSymbol }) => {
                         gap: '8px',
                         padding: '4px 8px',
                         borderRadius: '6px',
-                        background: activeSymbol === lhs ? 'hsla(var(--primary), 0.15)' : 'transparent',
+                        background: activeSymbol === lhs ? 'var(--primary-glow)' : 'transparent',
                         transition: 'background 0.2s ease',
                         cursor: 'default'
                       }}
                     >
                       <span className="mono-text" style={{ 
-                        color: activeSymbol === lhs ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
+                        color: activeSymbol === lhs ? 'var(--primary)' : 'var(--foreground)',
                         fontWeight: 600,
                         minWidth: '30px'
                       }}>
                         {lhs}
                       </span>
-                      <span className="mono-text" style={{ color: 'hsla(var(--foreground), 0.5)' }}>→</span>
-                      <span className="mono-text" style={{ color: 'hsl(var(--foreground))', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                      <span className="mono-text" style={{ color: 'var(--text-dim)' }}>→</span>
+                      <span className="mono-text" style={{ color: 'var(--foreground)', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                         {rhsList.length > 0 ? rhsList.map((rhs, i) => (
                           <React.Fragment key={i}>
                             <motion.span 
                               layout
                               style={{ 
-                                background: 'hsla(var(--foreground), 0.08)', 
+                                background: 'var(--border-light)',
                                 padding: '2px 6px', 
                                 borderRadius: '4px',
-                                border: '1px solid hsla(var(--foreground), 0.1)'
+                                border: '1px solid var(--border)'
                               }}
                             >
                               {rhs}
                             </motion.span>
-                            {i < rhsList.length - 1 && <span style={{ color: 'hsla(var(--foreground), 0.3)' }}>|</span>}
+                            {i < rhsList.length - 1 && <span style={{ color: 'var(--text-dim)' }}>|</span>}
                           </React.Fragment>
                         )) : (
-                          <span style={{ color: 'hsla(var(--foreground), 0.4)' }}>∅</span>
+                          <span style={{ color: 'var(--text-dim)' }}>∅</span>
                         )}
                       </span>
                     </motion.div>
@@ -101,7 +101,7 @@ const StepVisualizer = ({ snapshots, activeSymbol, setActiveSymbol }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: index * 0.15 + 0.3 }}
-                style={{ display: 'flex', justifyContent: 'center', color: 'hsl(var(--primary))', margin: '-10px 0' }}
+                style={{ display: 'flex', justifyContent: 'center', color: 'var(--primary)', margin: '-10px 0' }}
               >
                 <ArrowDown size={28} style={{ opacity: 0.6 }} />
               </motion.div>

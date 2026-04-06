@@ -8,8 +8,8 @@ const Navbar = () => {
       padding: '1rem 2rem',
       display: 'flex',
       alignItems: 'center',
-      borderBottom: '1px solid hsla(var(--border), 0.5)',
-      background: 'hsla(var(--background), 0.8)',
+      borderBottom: '1px solid var(--border)',
+      background: 'var(--bg-card)',
       backdropFilter: 'blur(16px)',
       position: 'sticky',
       top: 0,
@@ -18,16 +18,16 @@ const Navbar = () => {
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         <div style={{ 
-          background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)))',
+          background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
           padding: '8px', 
           borderRadius: '10px',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 0 10px hsla(var(--primary), 0.5)'
+          boxShadow: '0 0 10px var(--primary-glow)'
         }}>
           <Network size={22} color="white" />
         </div>
         <h1 style={{ fontSize: '1.4rem', fontWeight: 700, margin: 0, letterSpacing: '-0.5px' }}>
-          <span style={{ color: 'hsl(var(--foreground))' }}>Automata</span>
+          <span style={{ color: 'var(--foreground)' }}>Automata</span>
           <span className="gradient-text">.studio</span>
         </h1>
       </div>

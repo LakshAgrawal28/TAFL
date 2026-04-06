@@ -32,25 +32,24 @@ const GrammarGraph = ({ grammar, activeSymbol }) => {
       seen.add(lhs);
 
       grammar[lhs].forEach((rhs, rIdx) => {
-        // Correct variable extraction: uppercase letters or multi-char names in brackets
-        const actualVars = Array.from(rhs).filter(c => c === c.toUpperCase() && c !== c.toLowerCase());
+        // Correct variable extraction: uppercase letters, symbols in brackets, or S'
+        const matches = rhs.match(/<[^>]+>|[A-Z]'?|./g) || [];
+        const actualVars = matches.map(s => s.startsWith('<') ? s.slice(1, -1) : s)
+                                 .filter(v => variables.includes(v));
         
         actualVars.forEach(v => {
-          if (variables.includes(v)) {
-            const isVActive = activeSymbol === null || activeSymbol === v;
-            const isEdgeActive = activeSymbol === null || activeSymbol === lhs || activeSymbol === v;
-            edges.push({
-              id: `e-${lhs}-${v}-${rIdx}`,
-              source: lhs,
-              target: v,
-              animated: isEdgeActive,
-              style: { 
-                stroke: isEdgeActive ? 'var(--primary)' : 'rgba(255, 255, 255, 0.05)', 
-                strokeWidth: isEdgeActive ? 2 : 1,
-                opacity: isEdgeActive ? 1 : 0.2
-              }
-            });
-          }
+          const isEdgeActive = activeSymbol === null || activeSymbol === lhs || activeSymbol === v;
+          edges.push({
+            id: `e-${lhs}-${v}-${rIdx}`,
+            source: lhs,
+            target: v,
+            animated: isEdgeActive,
+            style: {
+              stroke: isEdgeActive ? 'var(--primary)' : 'rgba(255, 255, 255, 0.05)',
+              strokeWidth: isEdgeActive ? 2 : 1,
+              opacity: isEdgeActive ? 1 : 0.2
+            }
+          });
         });
       });
     });
