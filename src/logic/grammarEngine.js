@@ -73,7 +73,7 @@ export class GrammarEngine {
   newStartSymbol(g, start) {
     let recursive = false;
     for (const rhsList of Object.values(g)) {
-      if (rhsList.some(rhs => rhs.includes(start))) {
+      if (rhsList.some(rhs => this.getSymbols(rhs).includes(start))) {
         recursive = true;
         break;
       }
@@ -94,7 +94,8 @@ export class GrammarEngine {
       changed = false;
       for (const [lhs, rhsList] of Object.entries(g)) {
         for (const rhs of rhsList) {
-          if (rhs === '' || Array.from(rhs).every(c => nullable.has(c))) {
+          const symbols = this.getSymbols(rhs);
+          if (rhs === '' || (symbols.length > 0 && symbols.every(s => nullable.has(s)))) {
             if (!nullable.has(lhs)) { nullable.add(lhs); changed = true; }
           }
         }
@@ -116,11 +117,12 @@ export class GrammarEngine {
 
   getNullableCombs(rhs, nullable) {
     let res = [''];
-    for (const char of rhs) {
+    const symbols = this.getSymbols(rhs);
+    for (const s of symbols) {
       let next = [];
       for (const prefix of res) {
-        next.push(prefix + char);
-        if (nullable.has(char)) next.push(prefix);
+        next.push(prefix + (s.length > 1 ? `<${s}>` : s));
+        if (nullable.has(s)) next.push(prefix);
       }
       res = next;
     }
@@ -138,8 +140,9 @@ export class GrammarEngine {
         for (const u of reachable) {
           if (g[u]) {
             g[u].forEach(rhs => {
-              if (rhs.length === 1 && vars.includes(rhs) && !reachable.has(rhs)) {
-                reachable.add(rhs);
+              const symbols = this.getSymbols(rhs);
+              if (symbols.length === 1 && vars.includes(symbols[0]) && !reachable.has(symbols[0])) {
+                reachable.add(symbols[0]);
                 changed = true;
               }
             });
@@ -155,7 +158,8 @@ export class GrammarEngine {
       unitMap[v].forEach(target => {
         if (g[target]) {
           g[target].forEach(rhs => {
-            if (!(rhs.length === 1 && vars.includes(rhs))) newSet.add(rhs);
+            const symbols = this.getSymbols(rhs);
+            if (!(symbols.length === 1 && vars.includes(symbols[0]))) newSet.add(rhs);
           });
         }
       });
@@ -173,7 +177,7 @@ export class GrammarEngine {
       changed = false;
       for (const [lhs, rhsList] of Object.entries(g)) {
         if (!gen.has(lhs)) {
-          if (rhsList.some(rhs => Array.from(rhs).every(c => !vars.includes(c) || gen.has(c)))) {
+          if (rhsList.some(rhs => this.getSymbols(rhs).every(s => !vars.includes(s) || gen.has(s)))) {
             gen.add(lhs); changed = true;
           }
         }
@@ -182,7 +186,7 @@ export class GrammarEngine {
     let g1 = {};
     for (const [lhs, rhsList] of Object.entries(g)) {
       if (gen.has(lhs)) {
-        const filtered = rhsList.filter(rhs => Array.from(rhs).every(c => !vars.includes(c) || gen.has(c)));
+        const filtered = rhsList.filter(rhs => this.getSymbols(rhs).every(s => !vars.includes(s) || gen.has(s)));
         if (filtered.length > 0) g1[lhs] = filtered;
       }
     }
@@ -197,8 +201,8 @@ export class GrammarEngine {
       for (const v of Array.from(reach)) {
         if (g1[v]) {
           g1[v].forEach(rhs => {
-            Array.from(rhs).forEach(c => {
-               if (vars.includes(c) && !reach.has(c)) { reach.add(c); changed = true; }
+            this.getSymbols(rhs).forEach(s => {
+               if (vars.includes(s) && !reach.has(s)) { reach.add(s); changed = true; }
             });
           });
         }
@@ -218,17 +222,18 @@ export class GrammarEngine {
     // Phase 1: terminals in mixed RHS
     for (const [lhs, rhsList] of Object.entries(g1)) {
       g1[lhs] = rhsList.map(rhs => {
-        if (rhs.length <= 1) return rhs;
-        return Array.from(rhs).map(c => {
-          if (!vars.includes(c)) {
-            if (!terminalMap[c]) {
-              const newV = `X${this.getTerminalId(c)}`;
-              terminalMap[c] = newV;
-              g1[newV] = [c];
+        const symbols = this.getSymbols(rhs);
+        if (symbols.length <= 1) return rhs;
+        return symbols.map(s => {
+          if (!vars.includes(s)) {
+            if (!terminalMap[s]) {
+              const newV = `X${this.getTerminalId(s)}`;
+              terminalMap[s] = newV;
+              g1[newV] = [s];
             }
-            return `<${terminalMap[c]}>`;
+            return `<${terminalMap[s]}>`;
           }
-          return `<${c}>`;
+          return `<${s}>`;
         }).join('');
       });
     }
@@ -240,17 +245,17 @@ export class GrammarEngine {
       for (const rhs of rhsList) {
         const symbols = this.getSymbols(rhs);
         if (symbols.length <= 2) {
-          finalG[lhs].add(symbols.join(''));
+          finalG[lhs].add(symbols.map(s => `<${s}>`).join(''));
         } else {
           let currentLhs = lhs;
           for (let i = 0; i < symbols.length - 2; i++) {
             const newV = `Y${varCount++}`;
             if (!finalG[currentLhs]) finalG[currentLhs] = new Set();
-            finalG[currentLhs].add(symbols[i] + newV);
+            finalG[currentLhs].add(`<${symbols[i]}><${newV}>`);
             currentLhs = newV;
             finalG[currentLhs] = new Set();
           }
-          finalG[currentLhs].add(symbols[symbols.length - 2] + symbols[symbols.length - 1]);
+          finalG[currentLhs].add(`<${symbols[symbols.length - 2]}><${symbols[symbols.length - 1]}>`);
         }
       }
     }
@@ -262,7 +267,7 @@ export class GrammarEngine {
 
   getTerminalId(c) { return c.charCodeAt(0); }
   getSymbols(rhs) {
-    const matches = rhs.match(/<[^>]+>|./g) || [];
+    const matches = rhs.match(/<[^>]+>|[A-Z]'?|./g) || [];
     return matches.map(s => s.startsWith('<') ? s.slice(1, -1) : s);
   }
 
@@ -271,7 +276,7 @@ export class GrammarEngine {
     this.addSnapshot("GNF Transition", "Starting GNF conversion from standard CNF.", cnf);
     // Extended GNF would require A_i -> A_j (i < j) renaming and left-recursion removal
     // Implementation of full Greibach algorithm here...
-    this.addSnapshot("GNF Final", "Greidbach Normal Form conversion complete (Heuristic).", cnf);
+    this.addSnapshot("GNF (Work in Progress)", "Greibach Normal Form transformation is currently under development. Showing intermediate CNF.", cnf);
     return { result: cnf, snapshots: this.snapshots };
   }
 }

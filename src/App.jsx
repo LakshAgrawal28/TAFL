@@ -6,7 +6,7 @@ import ResultPanel from './components/ResultPanel';
 import GrammarGraph from './components/GrammarGraph';
 import { GrammarEngine } from './logic/grammarEngine';
 import confetti from 'canvas-confetti';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 function App() {
   const [snapshots, setSnapshots] = useState([]);
