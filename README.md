@@ -1,16 +1,52 @@
-# React + Vite
+# TAFL Grammar Transformation Tool
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, interactive React-based educational tool designed to visualize the step-by-step transformation of Context-Free Grammars (CFG) into **Chomsky Normal Form (CNF)** and **Greibach Normal Form (GNF)**.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+-   **Interactive Input**: Define your CFG using intuitive production rules.
+-   **Step-by-Step Visualization**: Follow every stage of the transformation process with detailed explanations.
+-   **Dynamic Dependency Graphs**: Visualize grammar relationships using interactive D3.js/ReactFlow powered graphs.
+-   **Educational Mode**: Perfect for students learning Theory of Automata and Formal Languages (TAFL).
+-   **Premium UI**: Built with Framer Motion for smooth transitions and a sleek, modern aesthetic.
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+-   **Frontend**: React 19 (Vite)
+-   **Styling**: Vanilla CSS (Custom Glassmorphic Design)
+-   **Animations**: Framer Motion
+-   **Visualization**: ReactFlow & D3.js
+-   **Icons**: Lucide React
 
-## Expanding the ESLint configuration
+## 📥 Installation
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/LakshAgrawal28/TAFL.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd TAFL
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+## 📖 How to Use
+
+1. **Enter Grammar**: Type your production rules in the input panel (e.g., `S -> AB | a`).
+2. **Choose Mode**: Select either **CNF** or **GNF** transformation.
+3. **Analyze Steps**: Click through the transformation steps to see exactly how the grammar changes at each stage.
+4. **View Graph**: Switch to the Graph view to see a visual representation of your production rules.
+
+## ✨ Contribution
+
+Contributions are welcome! If you find a bug or have a feature suggestion, please open an issue or submit a pull request.
+
+---
+Developed with ❤️ for Academic Excellence.
