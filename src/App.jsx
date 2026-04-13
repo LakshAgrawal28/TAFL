@@ -199,10 +199,6 @@ function App() {
           </div>
         )}
       </main>
-
-      <footer style={{ marginTop: '80px', borderTop: '1px solid var(--border-subtle)', paddingTop: '24px', opacity: 0.5, fontSize: '0.8rem' }}>
-        <p>Theoretical Automata & Formal Languages Toolkit | Research Edition</p>
-      </footer>
     </div>
   );
 }
