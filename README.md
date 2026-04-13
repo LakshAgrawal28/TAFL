@@ -1,52 +1,62 @@
 # TAFL Grammar Transformation Tool
 
-A modern, interactive React-based educational tool designed to visualize the step-by-step transformation of Context-Free Grammars (CFG) into **Chomsky Normal Form (CNF)** and **Greibach Normal Form (GNF)**.
+A high-fidelity, interactive educational platform designed for the visualization and mathematical synthesis of Context-Free Grammars (CFG) into **Chomsky Normal Form (CNF)** and **Greibach Normal Form (GNF)**.
 
-## 🚀 Features
+## 🖼️ Visual Overview
 
--   **Interactive Input**: Define your CFG using intuitive production rules.
--   **Step-by-Step Visualization**: Follow every stage of the transformation process with detailed explanations.
--   **Dynamic Dependency Graphs**: Visualize grammar relationships using interactive D3.js/ReactFlow powered graphs.
--   **Educational Mode**: Perfect for students learning Theory of Automata and Formal Languages (TAFL).
--   **Premium UI**: Built with Framer Motion for smooth transitions and a sleek, modern aesthetic.
+### 1. Unified Interface
+A clean, glassmorphic design optimized for academic research and rule definition.
+![Home Interface](screenshots/home.png)
+
+### 2. Step-by-Step Derivation
+Detailed proof traces showing every mathematical transformation (Simplification, Unit Removal, Nullable Elimination, etc.).
+![Derivation Proof](screenshots/proof.png)
+
+### 3. Verification & Synthesis
+Final synthesized ruleset with an integrated membership verification suite (CYK Algorithm & Recursive Matching).
+![Verification Result](screenshots/result.png)
+
+## 🚀 Key Features
+
+- **Mathematical Proof Engine**: Automated conversion of arbitrary CFGs into CNF and GNF with real-time derivation snapshots.
+- **Interactive Membership Testing**: Verify if strings are part of the language $L(G)$ using the CYK algorithm (for CNF) and grammar matching (for GNF).
+- **Formal Expression Rendering**: Rules are rendered with proper mathematical notation for clarity.
+- **Academic Export**: Direct export of transformation proofs to Markdown for inclusion in reports.
+- **Educational Mode**: Tailored for students and enthusiasts of Theory of Automata and Formal Languages.
 
 ## 🛠️ Tech Stack
 
--   **Frontend**: React 19 (Vite)
--   **Styling**: Vanilla CSS (Custom Glassmorphic Design)
--   **Animations**: Framer Motion
--   **Visualization**: ReactFlow & D3.js
--   **Icons**: Lucide React
+- **Frontend**: React 19 (Vite)
+- **Styling**: Modern Vanilla CSS (Custom Design System)
+- **Animations**: Framer Motion for high-quality transitions.
+- **Math Logic**: Custom Grammar Simulation Engine.
+- **Icons**: Lucide React.
 
-## 📥 Installation
+## 📥 Installation & Setup
 
-1. Clone the repository:
+1. **Clone the repository**:
    ```bash
    git clone https://github.com/LakshAgrawal28/TAFL.git
    ```
-2. Navigate to the project directory:
+2. **Navigate to the directory**:
    ```bash
    cd TAFL
    ```
-3. Install dependencies:
+3. **Install dependencies**:
    ```bash
    npm install
    ```
-4. Start the development server:
+4. **Launch the development environment**:
    ```bash
    npm run dev
    ```
 
-## 📖 How to Use
+## 📖 Operational Guide
 
-1. **Enter Grammar**: Type your production rules in the input panel (e.g., `S -> AB | a`).
-2. **Choose Mode**: Select either **CNF** or **GNF** transformation.
-3. **Analyze Steps**: Click through the transformation steps to see exactly how the grammar changes at each stage.
-4. **View Graph**: Switch to the Graph view to see a visual representation of your production rules.
-
-## ✨ Contribution
-
-Contributions are welcome! If you find a bug or have a feature suggestion, please open an issue or submit a pull request.
+1. **Input Rules**: Define your grammar using standard notation (e.g., `S -> aS | b`).
+2. **Select Protocol**: Choose between **CNF** or **GNF** transformation pipelines.
+3. **Verify Steps**: Trace the derivation through the animated proof sequencer.
+4. **Test Strings**: Use the Verification Suite to test arbitrary strings against the target grammar.
 
 ---
-Developed with ❤️ for Academic Excellence.
+Developed for Academic Excellence in Formal Languages.
