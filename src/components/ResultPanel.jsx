@@ -3,13 +3,11 @@ import { Copy, Check, Download, Book, Search } from 'lucide-react';
 import { renderSymbol, renderRhs } from '../utils/formatters';
 import { GrammarEngine } from '../logic/grammarEngine';
 import CYKVisualizer from './CYKVisualizer';
-import PDAVisualizer from './PDAVisualizer';
 
 const ResultPanel = ({ finalGrammar, type }) => {
   const [copied, setCopied] = useState(false);
   const [testString, setTestString] = useState('');
   const [parseResult, setParseResult] = useState(null);
-  const [pda, setPda] = useState(null);
 
   useEffect(() => {
     const engine = new GrammarEngine();
@@ -21,7 +19,6 @@ const ResultPanel = ({ finalGrammar, type }) => {
           setParseResult(null);
         }
       } else if (type === 'GNF') {
-        setPda(engine.generatePDA(finalGrammar));
         if (testString) {
           setParseResult(engine.gnfVerify(finalGrammar, testString));
         } else {
@@ -30,7 +27,6 @@ const ResultPanel = ({ finalGrammar, type }) => {
       }
     } else {
       setParseResult(null);
-      setPda(null);
     }
   }, [testString, finalGrammar, type]);
 
@@ -83,13 +79,12 @@ const ResultPanel = ({ finalGrammar, type }) => {
       <section style={{ background: 'var(--bg-secondary)', padding: '24px', borderRadius: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
           <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--accent-blue)' }}></div>
-          <h3 style={{ margin: 0, fontSize: '1.2rem' }}>Membership Verification ({type === 'CNF' ? 'CYK' : 'PDA Simulation'})</h3>
+          <h3 style={{ margin: 0, fontSize: '1.2rem' }}>Membership Verification ({type === 'CNF' ? 'CYK' : 'Grammar Matching'})</h3>
         </div>
         
         <p className="description-text" style={{ marginBottom: '16px', fontSize: '0.85rem' }}>
-          {type === 'CNF' ? 'CYK algorithm performs an exhaustive O(n³) search.' : 'Direct simulation on the synthesized Greibach grammar.'}
+          {type === 'CNF' ? 'CYK algorithm performs an exhaustive O(n³) search.' : 'Direct recursive Matching on the Greibach grammar transitions.'}
         </p>
-
         <div style={{ display: 'flex', gap: '16px' }}>
           <div style={{ position: 'relative', flex: 1 }}>
             <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.3 }} />
@@ -132,13 +127,6 @@ const ResultPanel = ({ finalGrammar, type }) => {
           </div>
         )}
       </section>
-
-      {/* PDA Machine for GNF */}
-      {type === 'GNF' && pda && (
-        <PDAVisualizer pda={pda} />
-      )}
-
-      {/* 2. FORMAL DEFINITION BELOW */}
       <section>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
