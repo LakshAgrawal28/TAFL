@@ -140,6 +140,7 @@ export class GrammarEngine {
 
   eliminateUnit(g) {
     const vars = Object.keys(g);
+    const varsSet = new Set(vars);
     const unitMap = {};
     vars.forEach(v => {
       const reachable = new Set([v]);
@@ -150,7 +151,7 @@ export class GrammarEngine {
           if (g[u]) {
             g[u].forEach(rhs => {
               const symbols = this.getSymbols(rhs);
-              if (symbols.length === 1 && vars.includes(symbols[0]) && !reachable.has(symbols[0])) {
+              if (symbols.length === 1 && varsSet.has(symbols[0]) && !reachable.has(symbols[0])) {
                 reachable.add(symbols[0]);
                 changed = true;
               }
@@ -168,7 +169,7 @@ export class GrammarEngine {
         if (g[target]) {
           g[target].forEach(rhs => {
             const symbols = this.getSymbols(rhs);
-            if (!(symbols.length === 1 && vars.includes(symbols[0]))) newSet.add(rhs);
+            if (!(symbols.length === 1 && varsSet.has(symbols[0]))) newSet.add(rhs);
           });
         }
       });
@@ -181,12 +182,13 @@ export class GrammarEngine {
     // Generating
     const gen = new Set();
     const vars = Object.keys(g);
+    const varsSet = new Set(vars);
     let changed = true;
     while (changed) {
       changed = false;
       for (const [lhs, rhsList] of Object.entries(g)) {
         if (!gen.has(lhs)) {
-          if (rhsList.some(rhs => this.getSymbols(rhs).every(s => !vars.includes(s) || gen.has(s)))) {
+          if (rhsList.some(rhs => this.getSymbols(rhs).every(s => !varsSet.has(s) || gen.has(s)))) {
             gen.add(lhs); changed = true;
           }
         }
@@ -195,7 +197,7 @@ export class GrammarEngine {
     let g1 = {};
     for (const [lhs, rhsList] of Object.entries(g)) {
       if (gen.has(lhs)) {
-        const filtered = rhsList.filter(rhs => this.getSymbols(rhs).every(s => !vars.includes(s) || gen.has(s)));
+        const filtered = rhsList.filter(rhs => this.getSymbols(rhs).every(s => !varsSet.has(s) || gen.has(s)));
         if (filtered.length > 0) g1[lhs] = filtered;
       }
     }
@@ -211,7 +213,7 @@ export class GrammarEngine {
         if (g1[v]) {
           g1[v].forEach(rhs => {
             this.getSymbols(rhs).forEach(s => {
-               if (vars.includes(s) && !reach.has(s)) { reach.add(s); changed = true; }
+               if (varsSet.has(s) && !reach.has(s)) { reach.add(s); changed = true; }
             });
           });
         }
@@ -224,6 +226,7 @@ export class GrammarEngine {
 
   standardizeCNF(g) {
     const vars = Object.keys(g);
+    const varsSet = new Set(vars);
     const terminalMap = {};
     let g1 = JSON.parse(JSON.stringify(g));
     let divCounter = 1;
@@ -234,7 +237,7 @@ export class GrammarEngine {
         const symbols = this.getSymbols(rhs);
         if (symbols.length <= 1) return rhs; // a or B
         return symbols.map(s => {
-          if (!vars.includes(s) && this.isTerminal(s)) {
+          if (!varsSet.has(s) && this.isTerminal(s)) {
             if (!terminalMap[s]) {
               const newV = `X_${s}`; // Scholastic terminal-variable
               terminalMap[s] = newV;
@@ -417,7 +420,8 @@ export class GrammarEngine {
         currentG[Ai].forEach(rhs => {
             const symbols = this.getSymbols(rhs);
             const first = symbols[0];
-            if (indexedVars.includes(first) && indexedVars.indexOf(first) > i) {
+            const firstIdx = varIndices[first];
+            if (firstIdx !== undefined && (firstIdx - 1) > i) {
                 const gamma = symbols.slice(1).join(' ');
                 currentG[first].forEach(fRhs => {
                     newRhs.push(`${fRhs}${gamma ? ' ' + gamma : ''}`);
@@ -437,7 +441,7 @@ export class GrammarEngine {
             currentG[v].forEach(rhs => {
                 const symbols = this.getSymbols(rhs);
                 const first = symbols[0];
-                if (indexedVars.includes(first)) {
+                if (varIndices[first] !== undefined) {
                     const gamma = symbols.slice(1).join(' ');
                     currentG[first].forEach(fRhs => {
                         newRhs.push(`${fRhs}${gamma ? ' ' + gamma : ''}`);
